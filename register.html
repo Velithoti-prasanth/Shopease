@@ -1,115 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body {
-            background: url(images/register.jpg);
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        .card {
-            background: transparent;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
+<style>
+body {
+    background: url(images/login-1.jpg);
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
-        .card-header {
-            background: transparent;
-            border-bottom: none;
-            text-align: center;
-        }
+.card {
+    background: transparent;
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    color: white;
+}
 
 
-        .form-control {
-            border-radius: 10px;
-            padding: 10px;
-        }
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+}
 
 
-        .btn-primary {
-            width: 100%;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+.btn-primary {
+    width: 100%;
+    border-radius: 10px;
+}
 
 
-        .form-label {
-            font-weight: 500;
-        }
-
-
-        .form-control::placeholder {
-            color: #888;
-        }
-
-
-        .btn-primary:hover {
-            transform: scale(1.02);
-            transition: 0.3s;
-        }
-    </style>
+@media (max-width: 576px) {
+    .card {
+        margin: 15px;
+    }
+}
+</style>
 
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="row justify-content-center">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-lg-4 col-md-6 col-12">
 
-            <div class="col-md-5">
-                <div class="card p-4">
+<div class="card p-4">
 
-                    <div class="card-header">
-                        <h3>Create Account 📝</h3>
-                        <p>Please fill in this form to create an account</p>
-                    </div>
+<h3 class="text-center">Create Account 📝</h3>
+<p class="text-center text-black ">Register to continue</p>
 
-                    <div class="card-body">
-                        <form>
+<form onsubmit="handleRegister(event)">
 
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="text" class="form-control bg-light" placeholder="Enter username">
-                            </div>
+<input type="text" id="username" class="form-control mb-3" placeholder="Enter username" required>
 
-                            <div class="mb-3">
-                                <label class="form-label">Email address</label>
-                                <input type="email" class="form-control bg-light" placeholder="Enter email">
-                            </div>
+<input type="email" id="email" class="form-control mb-3" placeholder="Enter email" required>
 
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control bg-light" placeholder="Enter password">
-                            </div>
+<div class="input-group mb-3">
+    <input type="password" id="password" class="form-control" placeholder="Enter password" required> 
+</div>
 
-                            <button type="button" class="btn btn-primary w-100"
-                                onclick="window.location.href='index.html'">
-                                Register
-                            </button>
+<div class="input-group mb-3">
+    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
+</div>
 
-                            <p class="text-center mt-3">
-                                Already have an account? <a href="login.html" class="text-white">Login</a>
-                            </p>
+<button class="btn btn-primary text-white">Register</button>
 
-                        </form>
-                    </div>
+<p class="text-center mt-3">
+Already have an account? 
+<a href="login.html" class="text-white fw-bold">Login</a>
+</p>
 
-                </div>
-            </div>
+<div id="msg" class="text-center mt-2"></div>
 
-        </div>
-    </div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function handleRegister(e) {
+    e.preventDefault();
+
+    let username = document.getElementById("username").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let confirmPassword = document.getElementById("confirmPassword").value.trim();
+    let msg = document.getElementById("msg");
+
+    msg.textContent = "";
+
+    
+    if (password !== confirmPassword) {
+        msg.textContent = "Passwords do not match!";
+        msg.className = "text-danger text-center";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    
+    let exists = users.find(u => u.email === email);
+
+    if (exists) {
+        msg.textContent = "User already exists!";
+        msg.className = "text-warning text-center";
+        return;
+    }
+
+  
+    users.push({ username, email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    msg.textContent = "Registered successfully! Redirecting...";
+    msg.className = "text-success text-center";
+
+   
+    setTimeout(() => {
+        window.location.href = "login.html";
+    }, 1500);
+}
+
+
+function togglePassword(id) {
+    let field = document.getElementById(id);
+    field.type = field.type === "password" ? "text" : "password";
+}
+</script>
 
 </body>
-
 </html>
