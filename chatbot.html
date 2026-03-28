@@ -268,11 +268,11 @@
 <body>
 
 <nav class="navbar">
-  <a class="navbar-brand" href="index.html">🛍 ShopEase</a>
+  <a class="navbar-brand" href="home.html">🛍 ShopEase</a>
   <div class="nav-actions">
     <button class="theme-toggle" id="theme-toggle">🌙</button>
-    <a href="index.html" class="nav-btn" title="Shop">🏠</a>
-    <button class="nav-btn" onclick="window.location='index.html'" title="Cart">
+    <a href="home.html" class="nav-btn" title="Shop">🏠</a>
+    <button class="nav-btn" onclick="window.location='home.html'" title="Cart">
       🛒 <span class="badge-count cart-badge"></span>
     </button>
   </div>
@@ -476,7 +476,7 @@ Keep responses concise, friendly, and focused on shopping. Use emojis sparingly.
       const fallbackProducts = findProducts(text).slice(0, 4);
       const fallbackMsg = fallbackProducts.length
         ? `Here are some products that might match what you're looking for! 🛍`
-        : `I'm having trouble connecting to AI right now. Try using the search bar on the <a href="index.html" style="color:var(--accent)">home page</a>!`;
+        : `I'm having trouble connecting to AI right now. Try using the search bar on the <a href="home.html" style="color:var(--accent)">home page</a>!`;
       addBotMessage(fallbackMsg, fallbackProducts);
     }
 
@@ -497,7 +497,7 @@ Keep responses concise, friendly, and focused on shopping. Use emojis sparingly.
 
   function openProductPage(id) {
     localStorage.setItem('se_open_product', id);
-    window.location.href = 'index.html';
+    window.location.href = 'home.html';
   }
 
   /* ── Enter key ──────────────────────────────── */
