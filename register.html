@@ -1,143 +1,665 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<title>ShopEase — Create Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-body {
-    background: url(images/login-1.jpg);
-    background-size: cover;
-    background-position: center;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --dark: #0A0A0B;
+    --dark-2: #111114;
+    --dark-3: #1A1A1F;
+    --dark-4: #242429;
+    --text: #F0EDE8;
+    --text-muted: #7A7875;
+    --border: rgba(201,168,76,0.2);
+    --success: #4CAF7D;
+    --error: #E05555;
+  }
+
+  html, body { height: 100%; background: var(--dark); color: var(--text); font-family: 'DM Sans', sans-serif; }
+
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden; background: var(--dark);
+  }
+  .bg::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    top: -300px; left: -200px;
+    animation: drift1 14s ease-in-out infinite alternate;
+  }
+  .bg::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+    bottom: -200px; right: -100px;
+    animation: drift2 11s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { to { transform: translate(50px, 60px) scale(1.1); } }
+  @keyframes drift2 { to { transform: translate(-40px, -50px) scale(1.1); } }
+
+  .grid-lines {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .page {
+    position: relative; z-index: 1;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-}
+    justify-content: center;
+    padding: 40px 20px;
+  }
 
-
-.card {
-    background: transparent;
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    color: white;
-}
-
-
-.form-control {
-    border-radius: 10px;
-    padding: 10px;
-}
-
-
-.btn-primary {
+  .form-card {
     width: 100%;
+    max-width: 520px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: riseIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+  }
+  @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
+
+  /* Brand */
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--gold);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 40px;
+    justify-content: center;
+  }
+  .brand-icon {
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  /* Steps indicator */
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+  .step-item {
+    display: flex; align-items: center;
+  }
+  .step-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: var(--dark-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+    position: relative;
+    z-index: 1;
+  }
+  .step-dot.active {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+    color: var(--gold);
+    box-shadow: 0 0 0 4px var(--gold-dim);
+  }
+  .step-dot.done {
+    border-color: var(--success);
+    background: rgba(76,175,125,0.15);
+    color: var(--success);
+  }
+  .step-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-align: center;
+    transition: color 0.3s;
+  }
+  .step-label.active { color: var(--gold); }
+
+  .step-line {
+    width: 60px; height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0 4px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-bottom: 18px;
+  }
+  .step-line::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    transition: left 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .step-line.filled::after { left: 0; }
+
+  .step-group {
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* Form panel */
+  .form-panel {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+
+  .panel-header {
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    display: block; margin-bottom: 10px;
+  }
+  .panel-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Step contents */
+  .step-content {
+    display: none;
+    animation: stepFadeIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .step-content.active { display: block; }
+  @keyframes stepFadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+  .input-group:focus-within label { color: var(--gold); }
+
+  .input-wrap { position: relative; }
+  .input-wrap input, .input-wrap select {
+    width: 100%;
+    background: var(--dark-3);
+    border: 1px solid rgba(255,255,255,0.07);
     border-radius: 10px;
-}
+    padding: 15px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    -webkit-appearance: none;
+  }
+  .input-wrap input:focus, .input-wrap select:focus {
+    border-color: var(--gold);
+    background: var(--dark-4);
+    box-shadow: 0 0 0 3px var(--gold-dim);
+  }
+  .input-wrap input::placeholder { color: var(--text-muted); }
 
+  .input-line {
+    position: absolute; bottom: 0; left: 0;
+    height: 2px; width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 0 0 10px 10px;
+    transition: width 0.4s cubic-bezier(0.22,1,0.36,1);
+    pointer-events: none;
+  }
+  .input-wrap:focus-within .input-line { width: 100%; }
 
-@media (max-width: 576px) {
-    .card {
-        margin: 15px;
-    }
-}
+  /* Password strength */
+  .pwd-strength {
+    margin-top: 10px;
+  }
+  .strength-bars {
+    display: flex; gap: 4px; margin-bottom: 6px;
+  }
+  .strength-bar {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.07);
+    transition: background 0.4s;
+  }
+  .strength-bar.weak { background: var(--error); }
+  .strength-bar.medium { background: var(--gold); }
+  .strength-bar.strong { background: var(--success); }
+  .strength-label {
+    font-size: 11px; color: var(--text-muted);
+    transition: color 0.3s;
+  }
+
+  /* Error */
+  .error-msg {
+    font-size: 12px; color: var(--error);
+    margin-top: 6px; display: none;
+  }
+
+  /* Avatar picker */
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .avatar-opt {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: var(--dark-3);
+    border: 2px solid transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .avatar-opt:hover { border-color: rgba(201,168,76,0.4); transform: scale(1.05); }
+  .avatar-opt.selected { border-color: var(--gold); background: var(--gold-dim); transform: scale(1.05); }
+
+  .gender-row {
+    display: flex; gap: 12px;
+  }
+  .gender-btn {
+    flex: 1; padding: 14px;
+    background: var(--dark-3);
+    border: 1.5px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .gender-btn:hover, .gender-btn.selected {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* Navigation buttons */
+  .btn-row {
+    display: flex; gap: 12px; margin-top: 36px;
+  }
+  .btn-back {
+    flex: 0 0 auto;
+    padding: 15px 24px;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-back:hover { border-color: var(--text-muted); color: var(--text); }
+
+  .btn-next {
+    flex: 1;
+    padding: 15px;
+    background: var(--gold);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--dark); cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-next::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s;
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201,168,76,0.35); }
+  .btn-next:hover::before { left: 100%; }
+  .btn-next:active { transform: translateY(0); }
+
+  .btn-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(10,10,11,0.3);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .form-footer {
+    text-align: center; font-size: 14px;
+    color: var(--text-muted); margin-top: 24px;
+  }
+  .form-footer a {
+    color: var(--gold); text-decoration: none;
+    font-weight: 500; transition: opacity 0.2s;
+  }
+  .form-footer a:hover { opacity: 0.8; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark-4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 14px; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+    z-index: 999;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast-icon { color: var(--success); font-size: 16px; }
+
+  @media (max-width: 600px) {
+    .form-panel { padding: 28px 22px; }
+    .input-row { grid-template-columns: 1fr; }
+    .avatar-grid { grid-template-columns: repeat(5, 1fr); }
+    .step-line { width: 36px; }
+  }
 </style>
-
 </head>
-
 <body>
 
-<div class="container">
-<div class="row justify-content-center">
-<div class="col-lg-4 col-md-6 col-12">
+<div class="bg"></div>
+<div class="grid-lines"></div>
 
-<div class="card p-4">
+<div class="page">
+  <div class="form-card">
 
-<h3 class="text-center">Create Account 📝</h3>
-<p class="text-center text-black ">Register to continue</p>
+    <a href="login.html" class="brand">
+      <div class="brand-icon">🛒</div>
+      ShopEase
+    </a>
 
-<form onsubmit="handleRegister(event)">
+    <!-- Steps indicator -->
+    <div class="steps">
+      <div class="step-group">
+        <div class="step-dot active" id="dot1">1</div>
+        <div class="step-label active" id="lbl1">Account</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-group">
+        <div class="step-dot" id="dot2">2</div>
+        <div class="step-label" id="lbl2">Profile</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-group">
+        <div class="step-dot" id="dot3">3</div>
+        <div class="step-label" id="lbl3">Done</div>
+      </div>
+    </div>
 
-<input type="text" id="username" class="form-control mb-3" placeholder="Enter username" required>
+    <div class="form-panel">
+      <div class="form-panel-inner">
 
-<input type="email" id="email" class="form-control mb-3" placeholder="Enter email" required>
+        <!-- Step 1: Account -->
+        <div class="step-content active" id="step1">
+          <div class="panel-header">
+            <span class="eyebrow">Step 1 of 2</span>
+            <h2>Create your<br>account</h2>
+          </div>
 
-<div class="input-group mb-3">
-    <input type="password" id="password" class="form-control" placeholder="Enter password" required> 
+          <div class="input-group">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <input type="email" id="reg-email" placeholder="you@example.com">
+              <div class="input-line"></div>
+            </div>
+            <div class="error-msg" id="err-email">Please enter a valid email</div>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <input type="password" id="reg-pwd" placeholder="Create a strong password" oninput="checkStrength(this.value)">
+              <div class="input-line"></div>
+            </div>
+            <div class="pwd-strength">
+              <div class="strength-bars">
+                <div class="strength-bar" id="bar1"></div>
+                <div class="strength-bar" id="bar2"></div>
+                <div class="strength-bar" id="bar3"></div>
+                <div class="strength-bar" id="bar4"></div>
+              </div>
+              <span class="strength-label" id="strength-label">Enter a password</span>
+            </div>
+            <div class="error-msg" id="err-pwd">Password must be at least 6 characters</div>
+          </div>
+
+          <div class="input-group">
+            <label>Confirm password</label>
+            <div class="input-wrap">
+              <input type="password" id="reg-confirm" placeholder="Repeat your password">
+              <div class="input-line"></div>
+            </div>
+            <div class="error-msg" id="err-confirm">Passwords do not match</div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-next" onclick="goStep2()">
+              <span>Continue →</span>
+            </button>
+          </div>
+
+          <div class="form-footer">
+            Already have an account? <a href="login.html">Sign in</a>
+          </div>
+        </div>
+
+        <!-- Step 2: Profile -->
+        <div class="step-content" id="step2">
+          <div class="panel-header">
+            <span class="eyebrow">Step 2 of 2</span>
+            <h2>Your profile</h2>
+          </div>
+
+          <div class="input-row">
+            <div class="input-group">
+              <label>First name</label>
+              <div class="input-wrap">
+                <input type="text" id="reg-fname" placeholder="John">
+                <div class="input-line"></div>
+              </div>
+              <div class="error-msg" id="err-fname">Required</div>
+            </div>
+            <div class="input-group">
+              <label>Last name</label>
+              <div class="input-wrap">
+                <input type="text" id="reg-lname" placeholder="Doe">
+                <div class="input-line"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Phone number</label>
+            <div class="input-wrap">
+              <input type="tel" id="reg-phone" placeholder="+91 98765 43210">
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Choose an avatar</label>
+            <div class="avatar-grid" id="avatarGrid">
+              <div class="avatar-opt selected" data-val="🧑" onclick="selectAvatar(this)">🧑</div>
+              <div class="avatar-opt" data-val="👩" onclick="selectAvatar(this)">👩</div>
+              <div class="avatar-opt" data-val="🧔" onclick="selectAvatar(this)">🧔</div>
+              <div class="avatar-opt" data-val="👨‍💼" onclick="selectAvatar(this)">👨‍💼</div>
+              <div class="avatar-opt" data-val="👩‍💼" onclick="selectAvatar(this)">👩‍💼</div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-back" onclick="goStep1()">← Back</button>
+            <button class="btn-next" id="submitBtn" onclick="handleRegister()">
+              <span id="subText">Create Account</span>
+              <div class="btn-spinner" id="subSpinner"></div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="input-group mb-3">
-    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
-</div>
-
-<button class="btn btn-primary text-white">Register</button>
-
-<p class="text-center mt-3">
-Already have an account? 
-<a href="login.html" class="text-white fw-bold">Login</a>
-</p>
-
-<div id="msg" class="text-center mt-2"></div>
-
-</form>
-
-</div>
-</div>
-</div>
+<div class="toast" id="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toastMsg">Account created!</span>
 </div>
 
 <script>
-function handleRegister(e) {
-    e.preventDefault();
+let selectedAvatar = '🧑';
 
-    let username = document.getElementById("username").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value.trim();
-    let confirmPassword = document.getElementById("confirmPassword").value.trim();
-    let msg = document.getElementById("msg");
-
-    msg.textContent = "";
-
-    
-    if (password !== confirmPassword) {
-        msg.textContent = "Passwords do not match!";
-        msg.className = "text-danger text-center";
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    
-    let exists = users.find(u => u.email === email);
-
-    if (exists) {
-        msg.textContent = "User already exists!";
-        msg.className = "text-warning text-center";
-        return;
-    }
-
-  
-    users.push({ username, email, password });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    msg.textContent = "Registered successfully! Redirecting...";
-    msg.className = "text-success text-center";
-
-   
-    setTimeout(() => {
-        window.location.href = "login.html";
-    }, 1500);
+function selectAvatar(el) {
+  document.querySelectorAll('.avatar-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAvatar = el.dataset.val;
 }
 
+function checkStrength(val) {
+  const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+  const label = document.getElementById('strength-label');
+  bars.forEach(b => { b.className = 'strength-bar'; });
+  if (!val) { label.textContent = 'Enter a password'; return; }
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = ['weak', 'weak', 'medium', 'medium', 'strong'];
+  const names = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+  const cls = levels[score];
+  for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+  label.textContent = names[score] || 'Weak';
+  label.style.color = cls === 'weak' ? 'var(--error)' : cls === 'medium' ? 'var(--gold)' : 'var(--success)';
+}
 
-function togglePassword(id) {
-    let field = document.getElementById(id);
-    field.type = field.type === "password" ? "text" : "password";
+function goStep2() {
+  const email = document.getElementById('reg-email').value.trim();
+  const pwd = document.getElementById('reg-pwd').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  let valid = true;
+
+  document.getElementById('err-email').style.display = 'none';
+  document.getElementById('err-pwd').style.display = 'none';
+  document.getElementById('err-confirm').style.display = 'none';
+
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { document.getElementById('err-email').style.display = 'block'; valid = false; }
+  if (pwd.length < 6) { document.getElementById('err-pwd').style.display = 'block'; valid = false; }
+  if (pwd !== confirm) { document.getElementById('err-confirm').style.display = 'block'; valid = false; }
+
+  const users = JSON.parse(localStorage.getItem('shopease_users') || '[]');
+  if (users.find(u => u.email === email)) {
+    document.getElementById('err-email').textContent = 'Email already registered';
+    document.getElementById('err-email').style.display = 'block'; valid = false;
+  }
+
+  if (!valid) return;
+
+  // Advance steps
+  document.getElementById('dot1').classList.replace('active', 'done'); document.getElementById('dot1').textContent = '✓';
+  document.getElementById('dot2').classList.add('active');
+  document.getElementById('lbl1').classList.remove('active');
+  document.getElementById('lbl2').classList.add('active');
+  document.getElementById('line1').classList.add('filled');
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+}
+
+function goStep1() {
+  document.getElementById('dot1').className = 'step-dot active'; document.getElementById('dot1').textContent = '1';
+  document.getElementById('dot2').className = 'step-dot';
+  document.getElementById('lbl1').classList.add('active');
+  document.getElementById('lbl2').classList.remove('active');
+  document.getElementById('line1').classList.remove('filled');
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+}
+
+function handleRegister() {
+  const fname = document.getElementById('reg-fname').value.trim();
+  document.getElementById('err-fname').style.display = fname ? 'none' : 'block';
+  if (!fname) return;
+
+  const subText = document.getElementById('subText');
+  const spinner = document.getElementById('subSpinner');
+  subText.style.display = 'none'; spinner.style.display = 'block';
+
+  setTimeout(() => {
+    const email = document.getElementById('reg-email').value.trim();
+    const pwd = document.getElementById('reg-pwd').value;
+    const lname = document.getElementById('reg-lname').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const name = (fname + ' ' + lname).trim();
+
+    const users = JSON.parse(localStorage.getItem('shopease_users') || '[]');
+    const user = { name, email, password: pwd, phone, avatar: selectedAvatar, joined: new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) };
+    users.push(user);
+    localStorage.setItem('shopease_users', JSON.stringify(users));
+    localStorage.setItem('shopease_user', JSON.stringify(user));
+    localStorage.setItem('shopease_loggedin', 'true');
+
+    document.getElementById('dot2').classList.replace('active', 'done'); document.getElementById('dot2').textContent = '✓';
+    document.getElementById('dot3').classList.add('active');
+    document.getElementById('lbl2').classList.remove('active');
+    document.getElementById('lbl3').classList.add('active');
+    document.getElementById('line2').classList.add('filled');
+
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = 'Welcome to ShopEase, ' + fname + '!';
+    t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); window.location.href = 'profile.html'; }, 1400);
+  }, 1400);
 }
 </script>
-
 </body>
 </html>

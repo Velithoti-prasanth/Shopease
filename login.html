@@ -1,134 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<title>ShopEase — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-body {
-    background: url(images/login-1.jpg);
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --dark: #0A0A0B;
+    --dark-2: #111114;
+    --dark-3: #1A1A1F;
+    --dark-4: #242429;
+    --text: #F0EDE8;
+    --text-muted: #7A7875;
+    --border: rgba(201,168,76,0.2);
+    --error: #E05555;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* Animated background */
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    background: var(--dark);
+    overflow: hidden;
+  }
+  .bg::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+    top: -200px; right: -100px;
+    animation: drift1 12s ease-in-out infinite alternate;
+  }
+  .bg::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+    animation: drift2 10s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(40px, 60px) scale(1.1); } }
+  @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px, -50px) scale(1.15); } }
+
+  /* Grid lines */
+  .grid-lines {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .page {
+    position: relative; z-index: 1;
     display: flex;
+    height: 100vh;
+    align-items: stretch;
+  }
+
+  /* Left panel */
+  .left-panel {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    padding: 60px;
+    position: relative;
+    border-right: 1px solid var(--border);
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
+  }
+
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 80px;
+  }
+  .brand-icon {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .hero-text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 62px;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero-text h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-text p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 320px;
+    font-weight: 300;
+  }
+
+  .features {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .feature {
+    display: flex;
     align-items: center;
-}
+    gap: 14px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .feature:nth-child(1) { animation-delay: 0.8s; }
+  .feature:nth-child(2) { animation-delay: 1.0s; }
+  .feature:nth-child(3) { animation-delay: 1.2s; }
 
+  .feature-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .feature span {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
 
-.card {
-    background: transparent;
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    color: white;
-}
+  /* Right panel — form */
+  .right-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    opacity: 0;
+    animation: slideIn2 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s forwards;
+  }
 
-.form-control {
-    border-radius: 10px;
-    padding: 10px;
-}
+  @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+  @keyframes slideIn2 { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-
-.btn-primary {
+  .form-container {
     width: 100%;
+    max-width: 380px;
+  }
+
+  .form-header {
+    margin-bottom: 48px;
+  }
+  .form-header .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .form-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+
+  .input-group:focus-within label {
+    color: var(--gold);
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    background: var(--dark-3);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
-}
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  }
+  .input-wrap input:focus {
+    border-color: var(--gold);
+    background: var(--dark-4);
+    box-shadow: 0 0 0 3px var(--gold-dim);
+  }
+  .input-wrap input::placeholder { color: var(--text-muted); }
 
+  .input-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+    user-select: none;
+  }
+  .input-icon:hover { color: var(--gold); }
 
-@media (max-width: 576px) {
-    .card {
-        margin: 15px;
-    }
-}
+  .input-line {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 0 0 10px 10px;
+    transition: width 0.4s cubic-bezier(0.22,1,0.36,1);
+    pointer-events: none;
+  }
+  .input-wrap:focus-within .input-line { width: 100%; }
+
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 36px;
+    margin-top: -8px;
+  }
+
+  .remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .remember input[type="checkbox"] { display: none; }
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+    background: var(--dark-3);
+  }
+  .remember input:checked + .check-box {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .check-mark {
+    color: var(--dark);
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .remember input:checked + .check-box .check-mark { opacity: 1; }
+  .remember span { font-size: 13px; color: var(--text-muted); }
+
+  .forgot {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .forgot:hover { color: var(--gold); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dark);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201,168,76,0.35); }
+  .btn-primary:hover::before { left: 100%; }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(10,10,11,0.3);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+  .divider span { font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; }
+
+  .form-footer {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 28px;
+  }
+  .form-footer a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .form-footer a:hover { opacity: 0.8; }
+
+  .error-msg {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark-4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 14px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+    z-index: 999;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast-icon { color: var(--gold); font-size: 16px; }
+
+  @media (max-width: 768px) {
+    .left-panel { display: none; }
+    .right-panel { padding: 40px 28px; }
+  }
 </style>
-
 </head>
-
 <body>
 
-<div class="container">
-<div class="row justify-content-center">
-<div class="col-lg-4 col-md-6 col-12">
+<div class="bg"></div>
+<div class="grid-lines"></div>
 
-<div class="card p-4">
+<div class="page">
 
-<h3 class="text-center">Welcome Back 👋</h3>
-<p class="text-center text-light">Login to your account</p>
+  <!-- Left panel -->
+  <div class="left-panel">
+    <a href="#" class="brand">
+      <div class="brand-icon">🛒</div>
+      ShopEase
+    </a>
+    <div class="hero-text">
+      <h1>Welcome<br><em>back</em> to<br>ShopEase</h1>
+      <p>Your premium destination for curated fashion. Sign in to continue your journey.</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feature-dot"></div><span>Access your order history</span></div>
+      <div class="feature"><div class="feature-dot"></div><span>Manage your wishlist</span></div>
+      <div class="feature"><div class="feature-dot"></div><span>Exclusive member pricing</span></div>
+    </div>
+  </div>
 
-<!-- Demo Credentials -->
-<p class="text-black text-center small">
-kindly use this mail & pass: admin@gmail.com / 1234
-</p>
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div class="form-container">
 
-<form onsubmit="handleLogin(event)">
+      <div class="form-header">
+        <span class="eyebrow">Member Access</span>
+        <h2>Sign In</h2>
+      </div>
 
-<input type="email" id="email" class="form-control mb-3" placeholder="Enter email" required>
+      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
 
-<div class="input-group mb-3">
-    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
-    
+        <div class="input-group">
+          <label>Email address</label>
+          <div class="input-wrap">
+            <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+            <div class="input-line"></div>
+          </div>
+          <div class="error-msg" id="emailErr">Please enter a valid email</div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" placeholder="Your password" autocomplete="current-password" style="padding-right:48px">
+            <span class="input-icon" onclick="togglePwd()" id="eyeIcon">👁</span>
+            <div class="input-line"></div>
+          </div>
+          <div class="error-msg" id="passErr">Invalid email or password</div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember">
+            <input type="checkbox" id="rememberMe">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <span id="btnText">Sign In</span>
+          <div class="btn-spinner" id="btnSpinner"></div>
+        </button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="form-footer">
+          Don't have an account? <a href="register.html">Create one →</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>
 
-<button class="btn btn-primary">Login</button>
-
-<p class="text-center mt-3">
-Don’t have an account? 
-<a href="register.html" class="text-white fw-bold">Register</a>
-</p>
-
-<div id="errorMsg" class="text-danger text-center mt-2"></div>
-
-</form>
-
-</div>
-</div>
-</div>
+<div class="toast" id="toast">
+  <span class="toast-icon">✦</span>
+  <span id="toastMsg">Welcome back!</span>
 </div>
 
 <script>
-const demoUser = {
-    email: "admin@gmail.com",
-    password: "1234"
-};
+const DEMO = { email: 'admin@gmail.com', password: '1234' };
+
+function togglePwd() {
+  const inp = document.getElementById('password');
+  const icon = document.getElementById('eyeIcon');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icon.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
 
 function handleLogin(e) {
-    e.preventDefault();
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const emailErr = document.getElementById('emailErr');
+  const passErr = document.getElementById('passErr');
+  const btnText = document.getElementById('btnText');
+  const spinner = document.getElementById('btnSpinner');
 
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value.trim();
-    let error = document.getElementById("errorMsg");
+  emailErr.style.display = 'none';
+  passErr.style.display = 'none';
 
-    error.textContent = "";
+  if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    emailErr.style.display = 'block'; return;
+  }
 
-   
-    if (email === demoUser.email && password === demoUser.password) {
-        localStorage.setItem("isLoggedIn", "true");
-        window.location.href = "index.html";
-        return;
-    }
+  btnText.style.display = 'none';
+  spinner.style.display = 'block';
 
-   
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+  setTimeout(() => {
+    btnText.style.display = 'block';
+    spinner.style.display = 'none';
 
-    let valid = users.find(u => u.email === email && u.password === password);
+    const isDemoUser = email === DEMO.email && password === DEMO.password;
+    const users = JSON.parse(localStorage.getItem('shopease_users') || '[]');
+    const found = users.find(u => u.email === email && u.password === password);
 
-    if (valid) {
-        localStorage.setItem("isLoggedIn", "true");
-        window.location.href = "index.html";
+    if (isDemoUser || found) {
+      const user = isDemoUser ? { name: 'Admin User', email: DEMO.email } : found;
+      localStorage.setItem('shopease_user', JSON.stringify(user));
+      localStorage.setItem('shopease_loggedin', 'true');
+      showToast('Welcome back, ' + (user.name || 'friend') + '!');
+      setTimeout(() => window.location.href = 'profile.html', 1200);
     } else {
-        error.textContent = "Invalid email or password";
+      passErr.style.display = 'block';
+      document.getElementById('password').style.borderColor = 'var(--error)';
     }
-}
-
-
-function togglePassword() {
-    let pass = document.getElementById("password");
-    pass.type = pass.type === "password" ? "text" : "password";
+  }, 1200);
 }
 </script>
-
 </body>
 </html>

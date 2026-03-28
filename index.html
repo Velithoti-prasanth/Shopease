@@ -1,205 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-<style>
-#landing-page {
-    min-height: 100vh;
-    background-image: url("images/shopping.jpg");
-    background-size: cover;
-    background-position: center;
-}
-
-/* Hero content */
-.content-section {
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-}
-
-/* Cards */
-.card img {
-    height: 250px;
-    object-fit: cover;
-}
-
-/* Footer icons */
-.social-icon {
-    font-size: 28px;
-    transition: 0.3s;
-}
-
-.linkedin { color: #0A66C2; }
-.github { color: #ffffff; }
-
-.instagram {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.social-icon:hover {
-    transform: scale(1.3);
-}
-
-/* Footer hover */
-footer a:hover {
-    color: #ffc107;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopEase — Discover & Buy</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">🛒My Shop</a>
+<!-- ── NAVBAR ─────────────────────────────────── -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">🛍 ShopEase</a>
 
-        <div class="d-flex gap-2">
-            <a href="register.html" class="btn btn-outline-light">Register</a>
-            <a href="login.html" class="btn btn-outline-light">Login</a>
-        </div>
-    </div>
+  <div class="nav-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search products…" autocomplete="off">
+  </div>
+
+  <div class="nav-actions">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">🌙</button>
+
+    <a href="search.html" class="nav-btn" title="Smart Search">🔍</a>
+    <a href="chatbot.html" class="nav-btn" title="AI Assistant">🤖</a>
+
+    <button class="nav-btn" onclick="openWish()" title="Wishlist">
+      ❤️
+      <span class="badge-count wish-badge" id="wish-badge"></span>
+    </button>
+
+    <button class="nav-btn" onclick="openCart()" title="Cart">
+      🛒
+      <span class="badge-count cart-badge" id="cart-badge"></span>
+    </button>
+
+    <a href="orders.html" class="nav-btn" title="My orders">📦</a>
+    <a href="checkout.html" class="nav-btn" title="Checkout">💳</a>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section id="landing-page" class="d-flex align-items-center justify-content-center text-center text-white">
-    <div class="content-section">
-        <h2>Welcome to My Shop</h2>
-        <h1 class="display-5 display-md-3">Online Shopping Application</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio laboriosam, vitae iusto minima adipisci dolore debitis.</p>
-        <button class="btn btn-light">Shop Now</button>
-    </div>
+<!-- ── HERO ───────────────────────────────────── -->
+<section class="hero">
+  <h1>Shop <span>smarter</span>,<br>live better.</h1>
+  <p>Thousands of products. Real prices. No nonsense.</p>
 </section>
 
-<!-- PRODUCTS -->
-<div class="container mt-5">
-    <div class="row">
-
-        <!-- CARD -->
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="https://img.freepik.com/premium-psd/stylish-blue-plaid-shirt-psd-white-background_670382-239068.jpg">
-                <div class="card-body text-center">
-                    <h5>Perfomax</h5>
-                    <p>$19.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-1.jpg">
-                <div class="card-body text-center">
-                    <h5>Levi's</h5>
-                    <p>$13.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-3.jpg">
-                <div class="card-body text-center">
-                    <h5>Perfomax</h5>
-                    <p>$11.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-8.webp">
-                <div class="card-body text-center">
-                    <h5>DMNX</h5>
-                    <p>$9.00</p>
-                    <p>⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-5.jpg">
-                <div class="card-body text-center">
-                    <h5>Snitch</h5>
-                    <p>$7.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-6.jpg">
-                <div class="card-body text-center">
-                    <h5>Perfomax</h5>
-                    <p>$4.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-4.png">
-                <div class="card-body text-center">
-                    <h5>Max</h5>
-                    <p>$14.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="card h-100">
-                <img src="images/cloth-2.jpg">
-                <div class="card-body text-center">
-                    <h5>U.S POLO</h5>
-                    <p>$19.00</p>
-                    <p>⭐⭐⭐⭐</p>
-                    <button class="btn btn-warning btn-sm">Buy it</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
+<!-- ── FILTER BAR ─────────────────────────────── -->
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-chip active" data-cat="all">All</button>
+  <!-- categories injected here -->
+  <div class="price-filter">
+    <label>Sort</label>
+    <select id="sort-select">
+      <option value="">Default</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+      <option value="rating">Top rated</option>
+    </select>
+  </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="bg-dark text-white text-center mt-5 p-4">
-    <h5>© 2026 My Shop</h5>
-    <p>Developed by Velithoti Prasanth</p>
+<!-- ── PRODUCTS GRID ───────────────────────────── -->
+<p class="section-head" id="results-count"></p>
+<div class="products-grid" id="products-grid">
+  <!-- Skeletons while loading -->
+  <div class="skel-card"><div class="skeleton" style="aspect-ratio:1"></div><div style="padding:1rem"><div class="skeleton" style="height:14px;margin-bottom:.5rem;width:50%"></div><div class="skeleton" style="height:20px;margin-bottom:.5rem"></div><div class="skeleton" style="height:14px;width:70%"></div></div></div>
+  <div class="skel-card"><div class="skeleton" style="aspect-ratio:1"></div><div style="padding:1rem"><div class="skeleton" style="height:14px;margin-bottom:.5rem;width:50%"></div><div class="skeleton" style="height:20px;margin-bottom:.5rem"></div><div class="skeleton" style="height:14px;width:70%"></div></div></div>
+  <div class="skel-card"><div class="skeleton" style="aspect-ratio:1"></div><div style="padding:1rem"><div class="skeleton" style="height:14px;margin-bottom:.5rem;width:50%"></div><div class="skeleton" style="height:20px;margin-bottom:.5rem"></div><div class="skeleton" style="height:14px;width:70%"></div></div></div>
+  <div class="skel-card"><div class="skeleton" style="aspect-ratio:1"></div><div style="padding:1rem"><div class="skeleton" style="height:14px;margin-bottom:.5rem;width:50%"></div><div class="skeleton" style="height:20px;margin-bottom:.5rem"></div><div class="skeleton" style="height:14px;width:70%"></div></div></div>
+</div>
 
-    <div class="d-flex justify-content-center gap-4 mt-3">
-        <a href="https://www.linkedin.com/in/prasanth-velithoti-36296223a/" target="_blank" class="social-icon linkedin">
-            <i class="bi bi-linkedin"></i>
-        </a>
-
-        <a href="https://github.com/Velithoti-prasanth" target="_blank" class="social-icon github">
-            <i class="bi bi-github"></i>
-        </a>
-
-        <a href="#" class="social-icon instagram">
-            <i class="bi bi-instagram"></i>
-        </a>
+<!-- ── CART SIDE PANEL ─────────────────────────── -->
+<div class="overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="side-panel" id="cart-panel">
+  <div class="panel-header">
+    <h2>🛒 Your cart</h2>
+    <button class="panel-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="panel-body" id="cart-body"></div>
+  <div class="panel-footer">
+    <div class="cart-total">
+      <span class="label">Total</span>
+      <span class="amount" id="cart-total-disp">$0.00</span>
     </div>
-</footer>
+    <button class="btn-primary" onclick="window.location='checkout.html'">Checkout →</button>
+    <button class="btn-outline" onclick="closeCart()">Continue shopping</button>
+  </div>
+</div>
 
+<!-- ── WISHLIST SIDE PANEL ─────────────────────── -->
+<div class="overlay" id="wish-overlay" onclick="closeWish()"></div>
+<div class="side-panel" id="wish-panel">
+  <div class="panel-header">
+    <h2>❤️ Wishlist</h2>
+    <button class="panel-close" onclick="closeWish()">✕</button>
+  </div>
+  <div class="panel-body" id="wish-body"></div>
+</div>
+
+<!-- ── PRODUCT DETAIL MODAL ───────────────────── -->
+<div class="modal-overlay" id="modal-overlay" onclick="e => { if(e.target===this) closeModal(); }">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-img"><img id="modal-img" src="" alt=""></div>
+    <div class="modal-info">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <span class="modal-category" id="modal-cat"></span>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <div class="modal-stars" id="modal-stars"></div>
+      <div class="modal-price" id="modal-price"></div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-actions">
+        <button class="btn-primary" id="modal-cart-btn">Add to cart</button>
+        <button class="btn-outline" id="modal-wish-btn">♡ Save to wishlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ─────────────────────────── -->
+<div id="toast-container"></div>
+
+<script src="App.js"></script>
+<script>
+  let allProducts = [];
+  let currentCat = 'all';
+  let currentSort = '';
+  let currentSearch = '';
+  let openProduct = null;
+
+  /* ── Load data ──── */
+  async function load() {
+    try {
+      const [products, categories] = await Promise.all([
+        SE.fetchProducts(),
+        SE.fetchCategories()
+      ]);
+      allProducts = products;
+      renderCategories(categories);
+      renderProducts(allProducts);
+    } catch (e) {
+      document.getElementById('products-grid').innerHTML =
+        '<div class="empty-state" style="grid-column:1/-1"><div class="icon">⚠️</div><h3>Failed to load products</h3><p>Check your connection and reload.</p></div>';
+    }
+  }
+
+  /* ── Render categories ──── */
+  function renderCategories(cats) {
+    const bar = document.getElementById('filter-bar');
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.cat = cat;
+      btn.textContent = cap(cat);
+      btn.addEventListener('click', () => setCategory(cat));
+      bar.insertBefore(btn, bar.querySelector('.price-filter'));
+    });
+  }
+
+  /* ── Filter & sort ──── */
+  function getFiltered() {
+    let list = [...allProducts];
+    if (currentCat !== 'all') list = list.filter(p => p.category === currentCat);
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+    }
+    if (currentSort === 'price-asc') list.sort((a, b) => a.price - b.price);
+    if (currentSort === 'price-desc') list.sort((a, b) => b.price - a.price);
+    if (currentSort === 'rating') list.sort((a, b) => b.rating.rate - a.rating.rate);
+    return list;
+  }
+
+  function renderProducts(list) {
+    const grid = document.getElementById('products-grid');
+    const count = document.getElementById('results-count');
+    count.textContent = `${list.length} product${list.length !== 1 ? 's' : ''}`;
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><h3>No products found</h3><p>Try a different search or category.</p></div>`;
+      return;
+    }
+    grid.innerHTML = list.map(p => `
+      <div class="product-card" onclick="openModal(${p.id})">
+        <div class="img-wrap">
+          <img src="${p.image}" alt="${p.title}" loading="lazy">
+          <button class="wishlist-btn ${SE.isWished(p.id) ? 'active' : ''}"
+            onclick="event.stopPropagation(); toggleWish(${p.id})" id="wbtn-${p.id}">
+            ${SE.isWished(p.id) ? '❤️' : '🤍'}
+          </button>
+        </div>
+        <div class="card-body">
+          <span class="category-tag">${p.category}</span>
+          <div class="title">${p.title}</div>
+          <div class="stars">${SE.stars(p.rating.rate)} <span>(${p.rating.count})</span></div>
+        </div>
+        <div class="card-footer">
+          <span class="price">$${p.price.toFixed(2)}</span>
+          <button class="add-cart-btn" onclick="event.stopPropagation(); addToCart(${p.id})">
+            + Cart
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function refresh() { renderProducts(getFiltered()); }
+
+  function setCategory(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.filter-chip').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.cat === cat));
+    refresh();
+  }
+
+  document.getElementById('sort-select').addEventListener('change', e => {
+    currentSort = e.target.value;
+    refresh();
+  });
+
+  document.getElementById('search-input').addEventListener('input', e => {
+    currentSearch = e.target.value.trim();
+    refresh();
+  });
+
+  /* ── Cart ──── */
+  function addToCart(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (p) SE.cartAdd(p);
+  }
+
+  function openCart() {
+    renderCart();
+    document.getElementById('cart-panel').classList.add('open');
+    document.getElementById('cart-overlay').classList.add('open');
+  }
+
+  function closeCart() {
+    document.getElementById('cart-panel').classList.remove('open');
+    document.getElementById('cart-overlay').classList.remove('open');
+  }
+
+  function renderCart() {
+    const body = document.getElementById('cart-body');
+    const total = document.getElementById('cart-total-disp');
+    total.textContent = '$' + SE.cartTotal();
+    if (!SE.state.cart.length) {
+      body.innerHTML = `<div class="empty-state"><div class="icon">🛒</div><h3>Cart is empty</h3><p>Add some products!</p></div>`;
+      return;
+    }
+    body.innerHTML = SE.state.cart.map(i => `
+      <div class="cart-item">
+        <img src="${i.image}" alt="${i.title}">
+        <div class="cart-item-info">
+          <div class="cart-item-title">${i.title.slice(0, 50)}…</div>
+          <div class="cart-item-price">$${(i.price * i.qty).toFixed(2)}</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${i.id}, -1)">−</button>
+            <span class="qty-num">${i.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i.id}, 1)">+</button>
+          </div>
+        </div>
+        <button class="remove-btn" onclick="removeCart(${i.id})">🗑</button>
+      </div>
+    `).join('');
+  }
+
+  function changeQty(id, d) { SE.cartQty(id, d); renderCart(); }
+  function removeCart(id) { SE.cartRemove(id); renderCart(); }
+
+  /* ── Wishlist ──── */
+  function toggleWish(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return;
+    const added = SE.wishToggle(p);
+    const btn = document.getElementById('wbtn-' + id);
+    if (btn) { btn.textContent = added ? '❤️' : '🤍'; btn.classList.toggle('active', added); }
+  }
+
+  function openWish() {
+    renderWish();
+    document.getElementById('wish-panel').classList.add('open');
+    document.getElementById('wish-overlay').classList.add('open');
+  }
+
+  function closeWish() {
+    document.getElementById('wish-panel').classList.remove('open');
+    document.getElementById('wish-overlay').classList.remove('open');
+  }
+
+  function renderWish() {
+    const body = document.getElementById('wish-body');
+    if (!SE.state.wishlist.length) {
+      body.innerHTML = `<div class="empty-state"><div class="icon">💔</div><h3>Wishlist is empty</h3><p>Heart products to save them.</p></div>`;
+      return;
+    }
+    body.innerHTML = SE.state.wishlist.map(p => `
+      <div class="wish-item">
+        <img src="${p.image}" alt="${p.title}">
+        <div class="wish-item-info">
+          <div class="wish-item-title">${p.title.slice(0, 45)}…</div>
+          <div class="wish-item-price">$${p.price.toFixed(2)}</div>
+        </div>
+        <button class="add-cart-btn" onclick="SE.cartAdd(${JSON.stringify(p).replace(/"/g,'&quot;')}); SE.toast('Added to cart','success')">+ Cart</button>
+      </div>
+    `).join('');
+  }
+
+  /* ── Product modal ──── */
+  function openModal(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return;
+    openProduct = p;
+    document.getElementById('modal-img').src = p.image;
+    document.getElementById('modal-cat').textContent = p.category;
+    document.getElementById('modal-title').textContent = p.title;
+    document.getElementById('modal-price').textContent = '$' + p.price.toFixed(2);
+    document.getElementById('modal-desc').textContent = p.description;
+    document.getElementById('modal-stars').innerHTML =
+      `${SE.stars(p.rating.rate)} <span>${p.rating.rate} (${p.rating.count} reviews)</span>`;
+    document.getElementById('modal-cart-btn').onclick = () => { SE.cartAdd(p); };
+    document.getElementById('modal-wish-btn').onclick = () => {
+      const added = SE.wishToggle(p);
+      document.getElementById('modal-wish-btn').textContent = added ? '❤️ Saved!' : '♡ Save to wishlist';
+    };
+    document.getElementById('modal-wish-btn').textContent =
+      SE.isWished(p.id) ? '❤️ Saved!' : '♡ Save to wishlist';
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCart(); closeWish(); } });
+
+  /* ── Utils ──── */
+  function cap(s) { return s.split("'").map(w => w[0].toUpperCase() + w.slice(1)).join("'"); }
+
+  load();
+</script>
 </body>
 </html>
