@@ -28,6 +28,7 @@
   function render() {
     const container = document.getElementById('orders-list');
     const orders = SE.state.orders;
+
     if (!orders.length) {
       container.innerHTML = `
         <div class="empty-state">
@@ -38,6 +39,7 @@
         </div>`;
       return;
     }
+
     container.innerHTML = orders.map(o => `
       <div class="order-card">
         <div class="order-header">
@@ -51,7 +53,10 @@
           ${o.items.map(i => `
             <div class="order-item-row">
               <img src="${i.image}" alt="${i.title}">
-              <span class="order-item-name">${i.title.slice(0, 45)}… <span style="color:var(--text-3)">×${i.qty}</span></span>
+              <span class="order-item-name">
+                ${i.title.length > 45 ? i.title.slice(0, 45) + '…' : i.title}
+                <span style="color:var(--text-3)">×${i.qty}</span>
+              </span>
               <span class="order-item-price">$${(i.price * i.qty).toFixed(2)}</span>
             </div>
           `).join('')}
@@ -63,7 +68,9 @@
       </div>
     `).join('');
   }
-  render();
+
+  // ✅ Wait for DOMContentLoaded so app.js has fully loaded SE.state before rendering
+  document.addEventListener('DOMContentLoaded', render);
 </script>
 </body>
 </html>

@@ -486,7 +486,7 @@
 <div class="grid-lines"></div>
 
 <nav>
-  <a href="home.html" class="nav-brand">
+  <a href="index.html" class="nav-brand">
     <div class="brand-icon">🛒</div>
     ShopEase
   </a>
@@ -644,17 +644,17 @@
 let isEditing = false;
 let user = {};
 
-// Reads from the SAME keys that shopease/js/app.js writes:
-//   se_orders   → placed orders (array of {id, date, items, total, status})
-//   se_wishlist → wishlisted products (array)
-function getOrders()   { return JSON.parse(localStorage.getItem('se_orders')   || '[]'); }
-function getWishCount(){ return JSON.parse(localStorage.getItem('se_wishlist') || '[]').length; }
+// Reads from the SAME per-user keys that app.js writes:
+//   se_orders_<email>   → this user's placed orders
+//   se_wishlist_<email> → this user's wishlist
+function getOrders(email)   { return JSON.parse(localStorage.getItem(`se_orders_${email}`)   || '[]'); }
+function getWishCount(email){ return JSON.parse(localStorage.getItem(`se_wishlist_${email}`) || '[]').length; }
 
 function renderOrders(orders) {
   const list = document.getElementById('orderList');
   if (!orders.length) {
     list.innerHTML = `<div style="padding:32px 0;text-align:center;color:var(--text-muted);font-size:14px;">
-      No orders yet — <a href="shopease/home.html" style="color:var(--gold);text-decoration:none;">start shopping →</a>
+      No orders yet — <a href="home.html" style="color:var(--gold);text-decoration:none;">start shopping →</a>
     </div>`;
     return;
   }
@@ -712,9 +712,9 @@ function init() {
   document.getElementById('valPhone').textContent = phone || 'Not added';
   document.getElementById('valPhone').className   = phone ? 'info-val' : 'info-val empty';
 
-  // Pull from the SAME localStorage keys the shop uses
-  const orders     = getOrders();
-  const wishCount  = getWishCount();
+  // Pull from the SAME localStorage keys the shop uses (scoped by email)
+  const orders     = getOrders(email);
+  const wishCount  = getWishCount(email);
   const totalSpent = orders.reduce((sum, o) => sum + parseFloat(o.total || o.amount || 0), 0);
   const points     = Math.floor(totalSpent * 10); // 10 pts per $1
 
