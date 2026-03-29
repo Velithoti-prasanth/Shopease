@@ -1,20 +1,31 @@
 /* ── ShopEase — core state & utilities ────────── */
+const SE = (() =>{
+const user = JSON.parse(localStorage.getItem('shopease_user')) || {};
 
-const SE = (() => {
 
-  /* ── State ────────────────────────────────────── */
-  let state = {
-    cart: JSON.parse(localStorage.getItem('se_cart') || '[]'),
-    wishlist: JSON.parse(localStorage.getItem('se_wishlist') || '[]'),
-    orders: JSON.parse(localStorage.getItem('se_orders') || '[]'),
-    theme: localStorage.getItem('se_theme') || 'light',
-  };
 
-  const save = () => {
-    localStorage.setItem('se_cart', JSON.stringify(state.cart));
-    localStorage.setItem('se_wishlist', JSON.stringify(state.wishlist));
-    localStorage.setItem('se_orders', JSON.stringify(state.orders));
-  };
+let state = {
+  cart: [],
+  wishlist: [],
+  orders: [],
+  theme: localStorage.getItem('se_theme') || 'light',
+};
+
+if (user && user.email) {
+  state.cart = JSON.parse(localStorage.getItem(`se_cart_${user.email}`) || '[]');
+  state.wishlist = JSON.parse(localStorage.getItem(`se_wishlist_${user.email}`) || '[]');
+  state.orders = JSON.parse(localStorage.getItem(`se_orders_${user.email}`) || '[]');
+}
+const save = () => {
+  if (!user || !user.email) {
+    console.error("User not logged in");
+    return;
+  }
+
+  localStorage.setItem(`se_cart_${user.email}`, JSON.stringify(state.cart));
+  localStorage.setItem(`se_wishlist_${user.email}`, JSON.stringify(state.wishlist));
+  localStorage.setItem(`se_orders_${user.email}`, JSON.stringify(state.orders));
+};
 
   /* ── Theme ─────────────────────────────────────── */
   const applyTheme = (t) => {

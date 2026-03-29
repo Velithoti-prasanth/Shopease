@@ -486,12 +486,12 @@
 <div class="grid-lines"></div>
 
 <nav>
-  <a href="index.html" class="nav-brand">
+  <a href="home.html" class="nav-brand">
     <div class="brand-icon">🛒</div>
     ShopEase
   </a>
   <div class="nav-actions">
-    <a href="index.html" class="nav-link">Shop</a>
+    <a href="home.html" class="nav-link">Shop</a>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </div>
 </nav>
@@ -644,38 +644,92 @@
 let isEditing = false;
 let user = {};
 
+// Reads from the SAME keys that shopease/js/app.js writes:
+//   se_orders   → placed orders (array of {id, date, items, total, status})
+//   se_wishlist → wishlisted products (array)
+function getOrders()   { return JSON.parse(localStorage.getItem('se_orders')   || '[]'); }
+function getWishCount(){ return JSON.parse(localStorage.getItem('se_wishlist') || '[]').length; }
+
+function renderOrders(orders) {
+  const list = document.getElementById('orderList');
+  if (!orders.length) {
+    list.innerHTML = `<div style="padding:32px 0;text-align:center;color:var(--text-muted);font-size:14px;">
+      No orders yet — <a href="shopease/home.html" style="color:var(--gold);text-decoration:none;">start shopping →</a>
+    </div>`;
+    return;
+  }
+
+  // Status from app.js is a string like "Confirmed" — map to style class
+  const statusClass = (s = '') => {
+    const sl = s.toLowerCase();
+    if (sl === 'delivered') return 'status-delivered';
+    if (sl === 'shipped')   return 'status-shipped';
+    return 'status-processing';  // Confirmed / Processing / anything else
+  };
+
+  // Each order from app.js has: {id, date, items:[{title,price,qty,image}], total, status}
+  // total is a string like "22.30" (USD from Fake Store API)
+  list.innerHTML = orders.map((o, i) => {
+    const itemSummary = o.items && o.items.length
+      ? o.items[0].title.slice(0, 40) + (o.items[0].title.length > 40 ? '…' : '') +
+        (o.items.length > 1 ? ` + ${o.items.length - 1} more` : '')
+      : 'Order items';
+    const totalAmt = o.total || o.amount || '0';
+    const currency = String(totalAmt).startsWith('₹') ? '' : '$';
+    return `
+      <div class="order-row" style="animation-delay:${0.9 + i * 0.1}s">
+        <div>
+          <div class="order-id">${o.id}</div>
+          <div class="order-name">${itemSummary}</div>
+          <div class="order-date">${o.date}</div>
+        </div>
+        <div class="order-amount">${currency}${totalAmt}</div>
+        <div class="order-status ${statusClass(o.status)}">${o.status || 'Confirmed'}</div>
+      </div>`;
+  }).join('');
+}
+
 function init() {
-  const loggedIn = localStorage.getItem('shopease_loggedin');
-  if (!loggedIn) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('shopease_loggedin')) {
+    window.location.href = 'login.html'; return;
+  }
 
   user = JSON.parse(localStorage.getItem('shopease_user') || '{}');
 
-  const name = user.name || 'Guest User';
-  const email = user.email || '';
-  const phone = user.phone || '';
+  const name   = user.name   || 'Guest User';
+  const email  = user.email  || '';
+  const phone  = user.phone  || '';
   const avatar = user.avatar || '🧑';
   const joined = user.joined || 'Recently';
 
   document.getElementById('avatarDisplay').textContent = avatar;
-  document.getElementById('heroName').textContent = name;
-  document.getElementById('heroEmail').textContent = email;
-  document.getElementById('heroJoined').textContent = joined;
+  document.getElementById('heroName').textContent      = name;
+  document.getElementById('heroEmail').textContent     = email;
+  document.getElementById('heroJoined').textContent    = joined;
 
-  document.getElementById('valName').textContent = name;
+  document.getElementById('valName').textContent  = name;
   document.getElementById('valEmail').textContent = email;
-  document.getElementById('valPhone').textContent = phone || null;
-  document.getElementById('valPhone').className = phone ? 'info-val' : 'info-val empty';
-  if (!phone) document.getElementById('valPhone').textContent = 'Not added';
+  document.getElementById('valPhone').textContent = phone || 'Not added';
+  document.getElementById('valPhone').className   = phone ? 'info-val' : 'info-val empty';
 
-  // Animate counters
-  animateCounter('statOrders', 3, '');
-  animateCounter('statWish', 7, '');
-  animateCounter('statPoints', 420, '');
-  animateCounterRupee('statSpent', 7597);
+  // Pull from the SAME localStorage keys the shop uses
+  const orders     = getOrders();
+  const wishCount  = getWishCount();
+  const totalSpent = orders.reduce((sum, o) => sum + parseFloat(o.total || o.amount || 0), 0);
+  const points     = Math.floor(totalSpent * 10); // 10 pts per $1
+
+  renderOrders(orders);
+
+  animateCounter('statOrders', orders.length, '');
+  animateCounter('statWish',   wishCount,     '');
+  animateCounter('statPoints', points,        '');
+  // Total is in $ (Fake Store API) — show as-is
+  animateCounterDollar('statSpent', totalSpent);
 }
 
 function animateCounter(id, target, suffix) {
   const el = document.getElementById(id);
+  if (target === 0) { el.textContent = '0'; return; }
   let current = 0;
   const step = target / 30;
   const timer = setInterval(() => {
@@ -685,30 +739,30 @@ function animateCounter(id, target, suffix) {
   }, 40);
 }
 
-function animateCounterRupee(id, target) {
+function animateCounterDollar(id, target) {
   const el = document.getElementById(id);
+  if (!target || target === 0) { el.textContent = '$0.00'; return; }
   let current = 0;
   const step = target / 40;
   const timer = setInterval(() => {
     current = Math.min(current + step, target);
-    el.textContent = '₹' + Math.floor(current).toLocaleString('en-IN');
+    el.textContent = '$' + current.toFixed(2);
     if (current >= target) clearInterval(timer);
   }, 35);
 }
 
 function toggleEdit() {
   isEditing = !isEditing;
-  const btn = document.getElementById('editBtn');
+  const btn     = document.getElementById('editBtn');
   const saveBtn = document.getElementById('saveBtn');
 
   if (isEditing) {
     btn.textContent = 'Cancel';
     saveBtn.classList.add('show');
-    document.getElementById('inpName').value = document.getElementById('valName').textContent;
+    document.getElementById('inpName').value  = document.getElementById('valName').textContent;
     document.getElementById('inpEmail').value = document.getElementById('valEmail').textContent;
-    document.getElementById('inpPhone').value = user.phone || '';
+    document.getElementById('inpPhone').value = user.phone  || '';
     document.getElementById('inpGender').value = user.gender || '';
-
     ['edName','edEmail','edPhone','edGender'].forEach(id => document.getElementById(id).style.display = 'flex');
     ['valName','valEmail','valPhone','valGender'].forEach(id => document.getElementById(id).style.display = 'none');
   } else {
@@ -720,26 +774,25 @@ function toggleEdit() {
 }
 
 function saveProfile() {
-  const name = document.getElementById('inpName').value.trim();
-  const email = document.getElementById('inpEmail').value.trim();
-  const phone = document.getElementById('inpPhone').value.trim();
+  const name   = document.getElementById('inpName').value.trim();
+  const email  = document.getElementById('inpEmail').value.trim();
+  const phone  = document.getElementById('inpPhone').value.trim();
   const gender = document.getElementById('inpGender').value.trim();
 
   user = { ...user, name, email, phone, gender };
   localStorage.setItem('shopease_user', JSON.stringify(user));
 
-  // Update users array
   const users = JSON.parse(localStorage.getItem('shopease_users') || '[]');
-  const idx = users.findIndex(u => u.email === user.email);
+  const idx   = users.findIndex(u => u.email === user.email);
   if (idx !== -1) { users[idx] = user; localStorage.setItem('shopease_users', JSON.stringify(users)); }
 
-  document.getElementById('valName').textContent = name;
+  document.getElementById('valName').textContent  = name;
   document.getElementById('valEmail').textContent = email;
   document.getElementById('valPhone').textContent = phone || 'Not added';
-  document.getElementById('valPhone').className = phone ? 'info-val' : 'info-val empty';
+  document.getElementById('valPhone').className   = phone ? 'info-val' : 'info-val empty';
   document.getElementById('valGender').textContent = gender || 'Not specified';
-  document.getElementById('valGender').className = gender ? 'info-val' : 'info-val empty';
-  document.getElementById('heroName').textContent = name;
+  document.getElementById('valGender').className   = gender ? 'info-val' : 'info-val empty';
+  document.getElementById('heroName').textContent  = name;
 
   toggleEdit();
   showToast('Profile updated successfully!');
